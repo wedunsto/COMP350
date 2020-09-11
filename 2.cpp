@@ -25,11 +25,8 @@ int main(){
     //Creates a NULL terminated array of character pointers for the execvp() method
     char *args[]={countPointer,wordCounterPointer,filePathPointer,NULL};
 
-    //Stores the word count from execvp() method
-    int wordCount=execvp(args[0],args);
     //Prints word count to the standard output
-    //cout<<"The number of words in 1.cpp is: :";
-    //cout<<wordCount<<endl;
+    execvp(args[0],args);
   }
   else if(forkResult>0){//If the fork returns to the parent process
     cout<<"I am the parent"<<endl;
