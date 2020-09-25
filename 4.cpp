@@ -8,7 +8,22 @@
 #include<pthread.h>
 using namespace std;
 
-int main(){
+void *printNumbers(void *arg){//Print digits from 0 to 10
+	for(int i=0;i<11;i++){
+		cout<<i<<" ";
+	}
+	cout<<endl;
+	pthread_exit(NULL);//Exit the current thread
+}
+void createThreads(){
+	pthread_t firstThreadID;//Create the first thread ID
+	pthread_t secondThreadID;//Create the second thread ID
 
+	pthread_create(&firstThreadID,NULL,&printNumbers,NULL);//Assigns the function to the thread
+	pthread_create(&secondThreadID,NULL,&printNumbers,NULL);//Assigns the function to the thread
+}
+
+int main(){
+	createThreads();
 	return 0;
 }
