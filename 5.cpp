@@ -6,12 +6,14 @@
 #include<sstream>
 using namespace std;
 
+void *printID(void *arg){
+	int *myID=(int *)arg;
+	cout<<*myID<<endl;
+}
+
 void populateThreadArray(pthread_t *threads, int size){
 	for(int i=0;i<size;i++){
-		pthread_t thread;
-		int *myID=(int *)thread;
-		cout<<i<<" "<<*myID<<endl;
-		threads[i]=thread;
+		cout<<i<<endl;
 	}
 }
 
