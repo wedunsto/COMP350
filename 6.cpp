@@ -14,6 +14,8 @@ using namespace std;
 
 int producerThreadCount;//Store the number of producer threads
 int consumerThreadCount;//Store the number of consumer threads
+vector<int> bufferContainer;//Vector to serve as buffer
+sem_t semaphore;
 
 void *testMethod(void *args){
 	cout<<"Hello World"<<endl;
@@ -32,5 +34,6 @@ int main(int argc, char* argv[]){
 	for(int j=0;j<consumerThreadCount;j++){
 		pthread_create(&consumerThreads[j],NULL,testMethod,NULL);
 	}
+	sem_init(&semaphore,0,1);
 	return 0;
 }
