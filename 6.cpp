@@ -18,15 +18,9 @@ vector<int> bufferContainer;//Vector to serve as buffer
 sem_t semaphore;//Data structure used to solve synchronization problems
 pthread_mutex_t lock;//Used to protect critical section
 
-void *testMethod(void *args){
-	pthread_mutex_lock(&lock);
-	cout<<"Test"<<endl;
-	pthread_mutex_unlock(&lock);
-	return NULL;
-}
 void *incrementBuffer(void *args){
-	pthread_mutex_lock(&lock);//Lock the critical section
 	sem_post(&semaphore);//Increment the semaphore
+	pthread_mutex_lock(&lock);//Lock the critical section
 	int bufferValue =*((int *)args);//Store buffer value from parameters
 	bufferContainer.push_back(bufferValue);//Increment buffer size
 	cout<<"The buffer size is now: "<<bufferContainer.size()<<endl;
@@ -35,11 +29,13 @@ void *incrementBuffer(void *args){
 }
 
 void *decrementBuffer(void *args){
-	pthread_mutex_lock(&lock);//Lock the critical section
-	sem_wait(&semaphore);//Decrement the (semaphore>0)
-	bufferContainer.erase(bufferContainer.begin());//Decrement buffer size
-	cout<<"The buffer size is now: "<<bufferContainer.size()<<endl;
-	pthread_mutex_unlock(&lock);//Unlock the critical section
+	if(bufferContainer.size()>0){
+		sem_wait(&semaphore);//Decrement the (semaphore>0)
+		pthread_mutex_lock(&lock);//Lock the critical section
+		bufferContainer.erase(bufferContainer.begin());//Decrement buffer size
+		cout<<"The buffer size is now: "<<bufferContainer.size()<<endl;
+		pthread_mutex_unlock(&lock);//Unlock the critical section
+	}
 	return NULL;
 }
 
