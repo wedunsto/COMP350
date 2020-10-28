@@ -15,10 +15,13 @@ int value=0;//Arbitrary value to write to data structure
 vector<int> bufferContainer;//Vector to serve as buffer
 sem_t mutex;//Used to protect the shared counter
 sem_t roomEmpty;//Used to categorical mutual exclusion
+sem_t turnstile;//Used to prevent writer thread starvation
 int reader=0;//Keep track of the number of readers
 pthread_mutex_t lock;//Used to protect critical section
 
 void *readerFunction(void *args){
+  sem_wait(&turnstile);//Enter into the turnstile
+  sem_post(&turnstile);//Prevents writer starvation
   sem_wait(&mutex);//Protect the reader counter
   reader++;//Increment the number of reader threads
   if(reader==1){//The first reader thread locks the room
@@ -38,19 +41,21 @@ void *readerFunction(void *args){
 }
 
 void *writerFunction(void *args){
+  sem_wait(&turnstile);//Enter into the turnstile
   sem_wait(&roomEmpty);//Make sure no one is in the room
   pthread_mutex_lock(&lock);//Lock the critical section
   bufferContainer.push_back(value);//Add value to data structure
   cout<<"Added: "<<value<<endl;
   pthread_mutex_unlock(&lock);//Unlock the critical section
+  sem_post(&turnstile);//Exit the turnstile
   sem_post(&roomEmpty);//Signal empty room
   return NULL;
 }
 
 int main(){
-  //1 if no thread in critical section 0 if not
-  sem_init(&roomEmpty,0,1);
+  sem_init(&roomEmpty,0,1);//1 if no thread in CS 0 if not
   sem_init(&mutex,0,1);
+  sem_init(&turnstile,0,1);
   int initLock=pthread_mutex_init(&lock,NULL);//Initialize mutex lock
   pthread_t writerThreads[3];//Array of writer threads
   pthread_t readerThreads[3];//Array of reader threads
