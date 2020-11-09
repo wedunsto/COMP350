@@ -60,8 +60,7 @@ void printWorkingDirectory(){//Print the current working directory
 }
 
 void nonBuiltInCommand(string userCommand){//Execvp non built in user commands
-  //char command[]=userCommand;//Create the execvp() input parameter
-  //char* commandPointer=strdup(command);//Convert input parameter to recognizable char pointer
+  //Convert command into execvp format
   char* commandPointer=new char[userCommand.length()+1];
   strcpy(commandPointer,userCommand.c_str());
   //Create a NULL terminated array of character pointers for execvp

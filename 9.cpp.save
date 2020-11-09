@@ -25,32 +25,20 @@ int rightFork(int philosopher){//Identifies fork right of philosopher
   return (philosopher+1)%count;//Circular rotation of philosophers
 }
 
-void startEating(int philosopher){//Determine if current philosopher can eat
-  if(state[philosopher]=="hungry" && state[leftFork(philosopher)]!="eating"
-  && state[rightFork(philosopher)]!="eating"){
-    state[philosopher]="eating";//Transition philosopher from hungry to eating
-    sem_post(&forks[philosopher]);
-  }
+void startEating(int philosopher){
 }
 
 void getFork(int philosopher){//Pick up forks for philosopher
   sem_wait(&footman);
-  state[philosopher]="hungry";//Transistion philosopher from thinking to hungry
-  startEating(philosopher);//Determine if current philosopher can eats
-  sem_post(&footman);
-  sem_wait(&forks[philosopher]);
+  state[i]="hungry";//Transistion philosopher from thinking to hungry
+  startEating(philosopher);//Determine if current philosopher can eatssssssssxffdfdess
   //sem_wait(&forks[rightFork(philosopher)]);
   //sem_wait(&forks[leftFork(philosopher)]);
 }
 
 void putFork(int philosopher){//Put down forks for philosopher
-  /*sem_post(&forks[rightFork(philosopher)]);
+  sem_post(&forks[rightFork(philosopher)]);
   sem_post(&forks[leftFork(philosopher)]);
-  sem_post(&footman);*/
-  sem_wait(&footman);
-  state[philosopher]="thinking";//Transition philosopher from eating to thinking
-  startEating(rightFork(philosopher));//Determine if right philosopher can eat
-  startEating(leftFork(philosopher));//Determine if left philosopher can eat
   sem_post(&footman);
 }
 

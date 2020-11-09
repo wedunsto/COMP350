@@ -8,7 +8,6 @@
  */
 
 #include<iostream>
-#include<unistd.h>
 #include<string.h>
 using namespace std;
 
@@ -60,10 +59,8 @@ void printWorkingDirectory(){//Print the current working directory
 }
 
 void nonBuiltInCommand(string userCommand){//Execvp non built in user commands
-  //char command[]=userCommand;//Create the execvp() input parameter
-  //char* commandPointer=strdup(command);//Convert input parameter to recognizable char pointer
-  char* commandPointer=new char[userCommand.length()+1];
-  strcpy(commandPointer,userCommand.c_str());
+  char command[]=userCommand;//Create the execvp() input parameter
+  char* commandPointer=strdup(command);//Convert input parameter to recognizable char pointer
   //Create a NULL terminated array of character pointers for execvp
   char* args[]={commandPointer,NULL};
   //Execute non built in command

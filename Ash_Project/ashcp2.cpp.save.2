@@ -8,7 +8,6 @@
  */
 
 #include<iostream>
-#include<unistd.h>
 #include<string.h>
 using namespace std;
 
@@ -59,32 +58,22 @@ void printWorkingDirectory(){//Print the current working directory
   cout<<"Working directory is: "<<prompt.substr(0,prompt.length()-1)<<endl;
 }
 
-void nonBuiltInCommand(string userCommand){//Execvp non built in user commands
-  //char command[]=userCommand;//Create the execvp() input parameter
-  //char* commandPointer=strdup(command);//Convert input parameter to recognizable char pointer
-  char* commandPointer=new char[userCommand.length()+1];
-  strcpy(commandPointer,userCommand.c_str());
-  //Create a NULL terminated array of character pointers for execvp
-  char* args[]={commandPointer,NULL};
-  //Execute non built in command
-  execvp(args[0],args);
+void notBuiltInCommand(string userCommand){//Execvp any non-built in command
+
 }
 
 int main(){
   while(true){//Continuously displays the command prompt
     string userCommand=getPrompt();//Gets and stores the user's command
-    if(userCommand.substr(0,4)=="exit"){//Tell the loop when to break
+    if(userCommand=="exit"){//Tell the loop when to break
       printExit();
       break;
     }
     else if(userCommand.substr(0,2)=="cd"){//If change directory command entered
       changeDirectory(userCommand);
     }
-    else if(userCommand.substr(0,4)=="path"){//If print working directory command entered
+    else if(userCommand=="pwd"){//If print working directory command entered
       printWorkingDirectory();
-    }
-    else{//Handle non  built in commands
-      nonBuiltInCommand(userCommand);
     }
   }
 }
