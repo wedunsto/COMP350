@@ -10,7 +10,10 @@
 #include<iostream>
 #include<unistd.h>
 #include<string.h>
+#include<stdlib.h>
 using namespace std;
+
+char environmentPath[]="ASH=/bin";//Create path variable
 
 string prompt="ash>";//Keeps track of current directory
 
@@ -70,6 +73,7 @@ void nonBuiltInCommand(string userCommand){//Execvp non built in user commands
 }
 
 int main(){
+  putenv(environmentPath);//Initialize path to /bin
   while(true){//Continuously displays the command prompt
     string userCommand=getPrompt();//Gets and stores the user's command
     if(userCommand.substr(0,4)=="exit"){//Tell the loop when to break
