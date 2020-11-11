@@ -55,10 +55,9 @@ void putFork(int philosopher){//Put down forks for philosopher
 
 void* philosopherProcess(void* args){//Method where philosophers eat
   int philosopher=*((int*)args);//convert arguement to int
-  while(true){
-    getFork(philosopher);//Pick up left fork
-    putFork(philosopher);//Pick up right fork
-  }
+  getFork(philosopher);//Pick up left fork
+  putFork(philosopher);//Pick up right fork
+  return NULL;
 }
 
 int main(){
