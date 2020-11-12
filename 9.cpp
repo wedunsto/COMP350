@@ -15,7 +15,7 @@ sem_t forks[5];//Enforces mutual exclusion to forks using semaphores
 int philosopher=0;//Identifies current philosopher
 pthread_t philosophers[5];//Threads representing all philosophers at the table
 pthread_mutex_t lock;//Used to protect critical section
-sem_t footman;//Prevent philosopher deadlock and starvation
+pthread_mutex_t temp;
 string state[5]={"thinking","thinking","thinking","thinking","thinking"};
 
 int leftFork(int philosopher){//Identifies fork left of philosopher
@@ -62,7 +62,6 @@ void* philosopherProcess(void* args){//Method where philosophers eat
 
 int main(){
   int initLock=pthread_mutex_init(&lock,NULL);//Initialize mutex lock
-  sem_init(&footman,0,4);//Initialize semaphore to 4 and private to this process
   for(int i=0;i<5;i++){//Create fork semaphores
     sem_init(&forks[i],0,1);//Initialize semaphores to 1 and private to this process
   }
