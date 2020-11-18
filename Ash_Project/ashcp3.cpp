@@ -8,8 +8,12 @@
  */
 
 #include<iostream>
+#include<unistd.h>
 #include<string.h>
+#include<stdlib.h>
 using namespace std;
+
+char environmentPath[]="ASH=/bin";//Create path variable
 
 string prompt="ash>";//Keeps track of current directory
 
@@ -59,8 +63,9 @@ void printWorkingDirectory(){//Print the current working directory
 }
 
 void nonBuiltInCommand(string userCommand){//Execvp non built in user commands
-  char command[]=userCommand;//Create the execvp() input parameter
-  char* commandPointer=strdup(command);//Convert input parameter to recognizable char pointer
+  //Convert command into execvp format
+  char* commandPointer=new char[userCommand.length()+1];
+  strcpy(commandPointer,userCommand.c_str());
   //Create a NULL terminated array of character pointers for execvp
   char* args[]={commandPointer,NULL};
   //Execute non built in command
@@ -68,6 +73,7 @@ void nonBuiltInCommand(string userCommand){//Execvp non built in user commands
 }
 
 int main(){
+  putenv(environmentPath);//Initialize path to /bin
   while(true){//Continuously displays the command prompt
     string userCommand=getPrompt();//Gets and stores the user's command
     if(userCommand.substr(0,4)=="exit"){//Tell the loop when to break
