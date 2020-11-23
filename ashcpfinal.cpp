@@ -6,7 +6,7 @@
  *Final checkpoint: Commands can now be executed from batch files
  *This feature is determined at the execution time
  */
-
+#include <bits/stdc++.h> 
 #include<iostream>
 #include<unistd.h>
 #include<string.h>
@@ -16,11 +16,9 @@ using namespace std;
 
 char environmentPath[]="ASH=/bin";//Create path variable
 string prompt="ash";
-//char prompt[100]="ash>";//Keeps track of current directory
 
 void programErrors(){
-  char error_message[30]="An error has occurred\n";
-  write(STDERR_FILENO,error_message,strlen(error_message));
+  cout<<"An error has occurred"<<endl;
 }
 
 //Prompts the user for a command and stores the command
@@ -67,8 +65,27 @@ void changeDirectory(string userCommand){
 }
 
 //FIX ME
-void printWorkingDirectory(){//Print the current working directory
-  //cout<<"Working directory is: "<<prompt.substr(0,prompt.length()-1)<<endl;
+void changePath(){//Set empty path
+  cout<<"Non-built in function are no longer available."<<endl;
+  setenv("PATH"," ",1);//Prevent the use of non-built in functions
+}
+
+void changePath(string userCommand){//Set user specified path
+  int pathPosition=0;//Keep track of path part
+  setenv("PATH"," ",1);//Reset the path variable
+  cout<<"Depending on your path, non-built in functions may be available."<<endl;
+	stringstream paths(userCommand);
+	string path;
+	while(getline(paths, path,' ')){//Tokenize the string for paths by space
+	  if(pathPosition==0){
+		  setenv("PATH",path.c_str(),1);//The first part of the path becomes the value
+		}
+		else{
+		  string newPath=getenv("PATH")+':'+path;//If more paths added, concatenate and append
+	    setenv("PATH",newPath.c_str(),1);
+		}
+          pathPosition++;
+	}
 }
 
 void nonBuiltInCommand(string userCommand){//Execvp non built in user commands
@@ -92,8 +109,13 @@ void readFromBatchFile(string fileName){
     else if(userCommand.substr(0,2)=="cd"){//If change directory command entered
       changeDirectory(userCommand);
     }
-    else if(userCommand.substr(0,4)=="path"){//If print working directory command entered
-      printWorkingDirectory();
+    else if(userCommand.substr(0,4)=="path"){//Change the search path
+      if(userCommand.length()==4){
+        changePath();
+      }
+      else{
+        changePath(userCommand.substr(5));
+      }
     }
     else{//Handle non  built in commands
       nonBuiltInCommand(userCommand);
@@ -119,8 +141,13 @@ int main(int argc, char* argv[]){
       else if(userCommand.substr(0,2)=="cd"){//If change directory command entered
        changeDirectory(userCommand.substr(3));
       }
-      else if(userCommand.substr(0,4)=="path"){//If print working directory command entered
-        printWorkingDirectory();
+      else if(userCommand.substr(0,4)=="path"){//Change the search path
+        if(userCommand.length()==4){
+          changePath();
+        }
+        else{
+          changePath(userCommand.substr(5));
+        }
       }
       else{//Handle non  built in commands
         nonBuiltInCommand(userCommand);
